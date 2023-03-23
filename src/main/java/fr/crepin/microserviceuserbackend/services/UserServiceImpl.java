@@ -4,9 +4,12 @@ import fr.crepin.microserviceuserbackend.dao.entity.UserData;
 import fr.crepin.microserviceuserbackend.dao.repository.UserDataRepository;
 import fr.crepin.microserviceuserbackend.dto.UserRequest;
 import fr.crepin.microserviceuserbackend.dto.UserResponse;
+import fr.crepin.microserviceuserbackend.exception.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,7 +22,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse switchTenantOwner(UserRequest request) {
+    public UserResponse switchTenantOwner(UserRequest request) throws DataValidationException {
+        if (!List.of("OWNER", "TENANT").contains(request.getNewrole().toUpperCase())) {
+            throw new DataValidationException("Not a valid role");
+        }
         UserData user = null;
         try {
             user = repository.findByEmailOrUsername(request.getUsername());
