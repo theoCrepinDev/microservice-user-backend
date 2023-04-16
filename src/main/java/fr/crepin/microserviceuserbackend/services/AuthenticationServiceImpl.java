@@ -67,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (isUserExist(request.getUsername(), request.getEmail())) {
             throw new RegisterUserException("User with this email or username already exist");
         }
-        var user = new UserData(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail(), new UserRole("USER"));
+        var user = new UserData(request.getUsername(), passwordEncoder.encode(request.getPassword()), request.getEmail(), new UserRole("TENANT"));
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();

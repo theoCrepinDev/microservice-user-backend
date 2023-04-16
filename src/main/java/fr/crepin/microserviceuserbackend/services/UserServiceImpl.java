@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse switchTenantOwner(UserRequest request) throws DataValidationException {
-        if (!List.of("OWNER", "TENANT").contains(request.getNewrole().toUpperCase())) {
+        if (!List.of("OWNER", "TENANT", "ADMIN").contains(request.getNewrole().toUpperCase())) {
             throw new DataValidationException("Not a valid role");
         }
         UserData user = null;
@@ -44,5 +44,10 @@ public class UserServiceImpl implements UserService {
             throw e;
         }
         return UserResponse.builder().isValid(true).user(user).message("Le rôle à bien été changé").build();
+    }
+
+    @Override
+    public List<UserData> findAllUsers() {
+        return repository.findAll();
     }
 }

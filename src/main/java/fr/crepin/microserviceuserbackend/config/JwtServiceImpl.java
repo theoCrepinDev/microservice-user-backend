@@ -1,5 +1,6 @@
 package fr.crepin.microserviceuserbackend.config;
 
+import fr.crepin.microserviceuserbackend.dao.entity.UserData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -27,10 +28,16 @@ public class JwtServiceImpl implements JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String extaractId(String token) {
+        var temp = extractAllClaims(token);
+        return temp.get("idu", String.class);
+    }
+
+    public String generateToken(UserData userDetails) {
         Map<String, Object> claims = new HashMap<>();
         List<? extends GrantedAuthority> authorities = userDetails.getAuthorities().stream().toList();
         claims.put("role", authorities.get(0).getAuthority());
+        claims.put("idu", userDetails.getId());
         return generateToken(claims, userDetails);
     }
 

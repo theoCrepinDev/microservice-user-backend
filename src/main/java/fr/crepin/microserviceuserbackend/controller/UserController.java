@@ -2,6 +2,7 @@ package fr.crepin.microserviceuserbackend.controller;
 
 import fr.crepin.microserviceuserbackend.dto.UserRequest;
 import fr.crepin.microserviceuserbackend.dto.UserResponse;
+import fr.crepin.microserviceuserbackend.dto.UsersResponse;
 import fr.crepin.microserviceuserbackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,18 @@ public class UserController {
             return this.service.switchTenantOwner(request);
         } catch (Exception e) {
             return UserResponse.builder().isValid(false).message("Unable to switch role").build();
+        }
+    }
+
+    @GetMapping("/all")
+    public UsersResponse getAllusers() {
+        try {
+            return UsersResponse.builder()
+                    .isValid(true)
+                    .user(service.findAllUsers())
+                    .build();
+        } catch (Exception e) {
+            return UsersResponse.builder().isValid(false).message("Unable to switch role").build();
         }
     }
 }
